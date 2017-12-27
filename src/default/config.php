@@ -1,0 +1,51 @@
+<?php
+
+$config = [
+    'events' => [
+        'deploy:starting' => ['Event\Handler\Deploy', 'starting'],
+        'deploy:ensure_stage' => ['Event\Handler\Deploy', 'ensureStage'],
+        'deploy:set_shared_assets' => ['Event\Handler\Deploy', 'setSharedAssets'],
+        'deploy:check' => ['Event\Handler\Deploy', 'check'],
+        'deploy:started' => ['Event\Handler\Deploy', 'started'],
+        'deploy:updating' => ['Event\Handler\Deploy', 'updating'],
+        'git:create_release' => ['Event\Handler\Git', 'createRelease'],
+        'deploy:symlink:shared' => ['Event\Handler\Deploy', 'symlinkShared'],
+//        'symfony:create_cache_dir' => '',
+//        'symfony:set_permissions' => '',
+        'deploy:updated' => ['Event\Handler\Deploy', 'updated'],
+//        'symfony:cache:warmup' => '',
+//        'symfony:clear_controllers' => '',
+        'deploy:publishing' => ['Event\Handler\Deploy', 'publishing'],
+        'deploy:symlink:release' => ['Event\Handler\Deploy', 'symlinkRelease'],
+        'deploy:restart' => ['Event\Handler\Deploy', 'restart'],
+        'deploy:published' => ['Event\Handler\Deploy', 'published'],
+        'deploy:finishing' => ['Event\Handler\Deploy', 'finishing'],
+        'deploy:cleanup' => ['Event\Handler\Deploy', 'cleanup'],
+        'deploy:finished' => ['Event\Handler\Deploy', 'finished'],
+        'deploy:log_revision' => ['Event\Handler\Deploy', 'logRevision'],
+    ],
+    'events_order' => [
+        'deploy:starting' => 'deploy:ensure_stage',
+        'deploy:ensure_stage' => 'deploy:set_shared_assets',
+        'deploy:set_shared_assets' => 'deploy:check',
+        'deploy:check' => 'deploy:started',
+        'deploy:started' => 'deploy:updating',
+        'deploy:updating' => 'git:create_release',
+        'git:create_release' => 'deploy:symlink:shared',
+        'deploy:symlink:shared' => 'deploy:updated',
+//        'symfony:create_cache_dir' => '',
+//        'symfony:set_permissions' => '',
+        'deploy:updated' => 'deploy:publishing',
+//        'symfony:cache:warmup' => '',
+//        'symfony:clear_controllers' => '',
+        'deploy:publishing' => 'deploy:symlink:release',
+        'deploy:symlink:release' => 'deploy:restart',
+        'deploy:restart' => 'deploy:published',
+        'deploy:published' => 'deploy:finishing',
+        'deploy:finishing' => 'deploy:cleanup',
+        'deploy:cleanup' => 'deploy:finished',
+        'deploy:finished' => 'deploy:log_revision',
+    ]
+];
+
+return $config;

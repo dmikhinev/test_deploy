@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+require __DIR__.'/vendor/autoload.php';
+
+use Config\Processor;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+try {
+    (new Application('deploy', '0.0.1'))
+        ->register('deploy')
+        ->setDescription('Deploy')
+        ->addOption('config', 'c', InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Config(s) to process in order.')
+        ->setCode(function (InputInterface $input, OutputInterface $output) {
+            $configProcessor = (new Processor())
+                ->addParser(new \Config\Parser\Php())
+                ->addParser(new \Config\Parser\Json())
+            ;
+            $configs = $input->getOption('config');
+            array_unshift($configs, __DIR__ . '/src/default/config.php');
+            $config = $configProcessor->process($configs);
+
+            foreach ($config as $k => $event) {
+                call_user_func($event);
+            }
+        })
+        ->getApplication()
+        ->setDefaultCommand('deploy', true)
+        ->run();
+} catch (\Exception $e) {
+    throw $e;
+}
